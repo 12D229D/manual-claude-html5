@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manual de referencia completo para Claude Code y Claude — Comandos, configuración, agentes, skills, hooks, MCP y mejores prácticas">
+  <title>Manual de Referencia de Claude (HTML5)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="header-brand">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="url(#logoGrad)"/>
+          <path d="M10 12h12M10 16h8M10 20h10" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="50%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#d946ef"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="brand-text">
+          <h1>Manual de Referencia de Claude</h1>
+          <span class="brand-subtitle">Claude Code • Comandos • Configuración • Agentes • MCP</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-icon" aria-label="Cambiar tema" title="Cambiar tema (Ctrl+Shift+L)">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button id="mobile-menu-toggle" class="btn-icon" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="search-container" role="search">
+      <label for="search-input" class="visually-hidden">Buscar en el manual</label>
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="search" id="search-input" placeholder="Buscar comandos, conceptos, ejemplos… (Ctrl+K)" autocomplete="off" aria-describedby="search-hint">
+      <span id="search-hint" class="visually-hidden">Escribe para filtrar secciones, comandos y ejemplos de código</span>
+      <div id="search-results" class="search-results" role="listbox" aria-label="Resultados de búsqueda"></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Navegación principal">
+      <nav class="sidebar-nav">
+        <ul class="nav-list" role="list">
+          <li class="nav-group">
+            <span class="nav-group-label">Fundamentos</span>
+            <ul class="nav-sublist">
+              <li><a class="nav-link" href="#introduccion" data-section="introduccion"><span class="nav-icon" aria-hidden="true">🚀</span> Introducción a Claude Code</a></li>
+              <li><a class="nav-link" href="#comandos-cli" data-section="comandos-cli"><span class="nav-icon" aria-hidden="true">⌨️</span> Comandos CLI</a></li>
+              <li><a class="nav-link" href="#configuracion" data-section="configuracion"><span class="nav-icon" aria-hidden="true">⚙️</span> Configuración</a></li>
+            </ul>
+          </li>
+          <li class="nav-group">
+            <span class="nav-group-label">Extensibilidad</span>
+            <ul class="nav-sublist">
+              <li><a class="nav-link" href="#agentes" data-section="agentes"><span class="nav-icon" aria-hidden="true">🤖</span> Agentes y Subagentes</a></li>
+              <li><a class="nav-link" href="#skills" data-section="skills"><span class="nav-icon" aria-hidden="true">🧠</span> Skills (Habilidades)</a></li>
+              <li><a class="nav-link" href="#slash-commands" data-section="slash-commands"><span class="nav-icon" aria-hidden="true">➗</span> Slash Commands</a></li>
+              <li><a class="nav-link" href="#hooks" data-section="hooks"><span class="nav-icon" aria-hidden="true">🪝</span> Hooks</a></li>
+              <li><a class="nav-link" href="#mcp" data-section="mcp"><span class="nav-icon" aria-hidden="true">🔌</span> MCP (Model Context Protocol)</a></li>
+            </ul>
+          </li>
+          <li class="nav-group">
+            <span class="nav-group-label">Avanzado</span>
+            <ul class="nav-sublist">
+              <li><a class="nav-link" href="#prompting-avanzado" data-section="prompting-avanzado"><span class="nav-icon" aria-hidden="true">🎯</span> Prompting Avanzado</a></li>
+              <li><a class="nav-link" href="#workflow" data-section="workflow"><span class="nav-icon" aria-hidden="true">🔄</span> Workflow & Best Practices</a></li>
+              <li><a class="nav-link" href="#troubleshooting" data-section="troubleshooting"><span class="nav-icon" aria-hidden="true">🔧</span> Troubleshooting & FAQ</a></li>
+              <li><a class="nav-link" href="#recursos" data-section="recursos"><span class="nav-icon" aria-hidden="true">📚</span> Recursos y Enlaces</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <div class="progress-ring" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso de lectura">
+            <svg class="progress-svg" viewBox="0 0 48 48">
+              <circle class="progress-bg" cx="24" cy="24" r="20" fill="none" stroke-width="4"/>
+              <circle class="progress-fill" cx="24" cy="24" r="20" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+            </svg>
+            <span class="progress-text">0%</span>
+          </div>
+          <p class="sidebar-version">v1.0.0 · <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">Docs oficiales</a></p>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" aria-hidden="true"></div>
+
+    <main id="main-content" class="main-content" role="main">
+      <section id="introduccion" class="doc-section" aria-labelledby="introduccion-heading">
+        <header class="section-header">
+          <h2 id="introduccion-heading">Introducción a Claude Code</h2>
+          <a href="#introduccion" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <div class="callout callout-info">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div class="callout-body">
+              <strong>Claude Code</strong> es la herramienta de línea de comandos oficial de Anthropic para integrar a Claude en tu flujo de desarrollo. Funciona como un agente de IA que puede leer, escribir, editar y ejecutar código en tu repositorio.
+            </div>
+          </div>
+
+          <h3>¿Qué es Claude Code?</h3>
+          <p>Claude Code es un <strong>agente de codificación autónomo</strong> que vive en tu terminal. A diferencia de los asistentes de código tradicionales, Claude Code puede:</p>
+          <ul>
+            <li>Leer y comprender toda tu base de código</li>
+            <li>Crear, editar y eliminar archivos</li>
+            <li>Ejecutar comandos de shell (tests, builds, lint, git)</li>
+            <li>Navegar por el historial de git y hacer commits</li>
+            <li>Usar herramientas MCP para acceder a servicios externos</li>
+            <li>Delegar tareas a subagentes especializados</li>
+          </ul>
+
+          <h3>Instalación</h3>
+          <div class="tabs" role="tablist" aria-label="Métodos de instalación">
+            <button class="tab-btn" role="tab" aria-selected="true" aria-controls="install-npm" id="tab-npm">npm (recomendado)</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="install-binary" id="tab-binary">Binario standalone</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="install-docker" id="tab-docker">Docker</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" role="tabpanel" id="install-npm" aria-labelledby="tab-npm">
+<pre><code class="language-bash"># Instalación global
+npm install -g @anthropic-ai/claude-code
+
+# Verificar instalación
+claude --version
+
+# Actualizar
+npm update -g @anthropic-ai/claude-code</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="install-binary" aria-labelledby="tab-binary" hidden>
+<pre><code class="language-bash"># Linux/macOS
+curl -fsSL https://claude.ai/install.sh | sh
+
+# Windows (PowerShell)
+irm https://claude.ai/install.ps1 | iex
+
+# Verificar
+claude --version</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="install-docker" aria-labelledby="tab-docker" hidden>
+<pre><code class="language-bash"># Imagen oficial
+docker pull anthropic/claude-code:latest
+
+# Ejecutar en directorio actual
+docker run -it --rm \
+  -v $(pwd):/workspace \
+  -v ~/.claude:/home/node/.claude \
+  anthropic/claude-code:latest</code></pre>
+            </div>
+          </div>
+
+          <h3>Autenticación</h3>
+          <p>Claude Code requiere una cuenta de Anthropic con acceso a la API:</p>
+<pre><code class="language-bash"># Iniciar sesión (abre navegador)
+claude auth login
+
+# Ver estado de autenticación
+claude auth status
+
+# Cambiar cuenta
+claude auth logout && claude auth login</code></pre>
+
+          <h3>Primeros pasos</h3>
+          <ol>
+            <li>Navega a tu proyecto: <code>cd mi-proyecto</code></li>
+            <li>Inicia Claude Code: <code>claude</code></li>
+            <li>Escribe tu primera tarea en lenguaje natural</li>
+          </ol>
+
+          <div class="callout callout-tip">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="callout-body">
+              <strong>Tip:</strong> Usa <kbd>Ctrl+C</kbd> para interrumpir una tarea en curso. Usa <kbd>Ctrl+D</kbd> o <code>/exit</code> para salir.
+            </div>
+          </div>
+
+          <h3>Conceptos clave</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Concepto</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Sesión</strong></td><td>Una conversación continua con contexto compartido</td></tr>
+              <tr><td><strong>Contexto</strong></td><td>Archivos leídos, comandos ejecutados, historial de chat</td></tr>
+              <tr><td><strong>Herramientas</strong></td><td>Acciones que Claude puede realizar (Read, Write, Bash, etc.)</td></tr>
+              <tr><td><strong>Permisos</strong></td><td>Control de qué herramientas puede usar Claude (allow/deny)</td></tr>
+              <tr><td><strong>Subagente</strong></td><td>Agente especializado para tareas específicas (testing, research, etc.)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="comandos-cli" class="doc-section" aria-labelledby="comandos-cli-heading">
+        <header class="section-header">
+          <h2 id="comandos-cli-heading">Comandos CLI</h2>
+          <a href="#comandos-cli" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Comando principal: <code>claude</code></h3>
+          <p>Inicia una sesión interactiva en el directorio actual.</p>
+
+          <h4>Flags principales</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Flag</th><th>Descripción</th><th>Ejemplo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>-p, --print</code></td><td>Modo no interactivo (imprime respuesta y sale)</td><td><code>claude -p "explica este archivo"</code></td></tr>
+              <tr><td><code>--model</code></td><td>Seleccionar modelo (sonnet, opus, haiku)</td><td><code>claude --model opus</code></td></tr>
+              <tr><td><code>--allowedTools</code></td><td>Lista de herramientas permitidas (coma-separado)</td><td><code>claude --allowedTools Read,Write,Bash</code></td></tr>
+              <tr><td><code>--disallowedTools</code></td><td>Lista de herramientas denegadas</td><td><code>claude --disallowedTools Bash</code></td></tr>
+              <tr><td><code>--permission-prompt-tool</code></td><td>Herramienta para prompts de permiso (mcp, cli)</td><td><code>claude --permission-prompt-tool mcp</code></td></tr>
+              <tr><td><code>--resume</code></td><td>Reanudar sesión anterior</td><td><code>claude --resume</code></td></tr>
+              <tr><td><code>--continue</code></td><td>Continuar la sesión más reciente</td><td><code>claude --continue</code></td></tr>
+              <tr><td><code>-c, --config</code></td><td>Ruta a archivo de configuración personalizado</td><td><code>claude -c ./my-config.json</code></td></tr>
+              <tr><td><code>--verbose</code></td><td>Salida detallada para debugging</td><td><code>claude --verbose</code></td></tr>
+              <tr><td><code>--version</code></td><td>Mostrar versión</td><td><code>claude --version</code></td></tr>
+              <tr><td><code>-h, --help</code></td><td>Mostrar ayuda</td><td><code>claude --help</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Subcomandos</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Comando</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>claude auth login</code></td><td>Iniciar sesión en Anthropic</td></tr>
+              <tr><td><code>claude auth logout</code></td><td>Cerrar sesión</td></tr>
+              <tr><td><code>claude auth status</code></td><td>Ver estado de autenticación</td></tr>
+              <tr><td><code>claude config get <key></code></td><td>Obtener valor de configuración</td></tr>
+              <tr><td><code>claude config set <key> <value></code></td><td>Establecer configuración</td></tr>
+              <tr><td><code>claude config list</code></td><td>Listar toda la configuración</td></tr>
+              <tr><td><code>claude doctor</code></td><td>Diagnosticar problemas de instalación/config</td></tr>
+              <tr><td><code>claude update</code></td><td>Actualizar a la última versión</td></tr>
+              <tr><td><code>claude migrate</code></td><td>Migrar configuración de versión anterior</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Comandos slash (durante la sesión)</h3>
+          <p>Disponibles dentro de la sesión interactiva escribiendo <code>/</code>:</p>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Comando</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>/help</code></td><td>Mostrar ayuda contextual</td></tr>
+              <tr><td><code>/exit</code> / <code>/quit</code></td><td>Salir de la sesión</td></tr>
+              <tr><td><code>/clear</code></td><td>Limpiar historial de conversación</td></tr>
+              <tr><td><code>/compact</code></td><td>Compactar contexto (resumir)</td></tr>
+              <tr><td><code>/cost</code></td><td>Mostrar coste estimado de la sesión</td></tr>
+              <tr><td><code>/model</code></td><td>Cambiar modelo (sonnet/opus/haiku)</td></tr>
+              <tr><td><code>/permissions</code></td><td>Gestionar permisos de herramientas</td></tr>
+              <tr><td><code>/tools</code></td><td>Listar herramientas disponibles</td></tr>
+              <tr><td><code>/mcp</code></td><td>Gestionar servidores MCP</td></tr>
+              <tr><td><code>/agents</code></td><td>Gestionar subagentes</td></tr>
+              <tr><td><code>/hooks</code></td><td>Gestionar hooks</td></tr>
+              <tr><td><code>/init</code></td><td>Inicializar CLAUDE.md en el proyecto</td></tr>
+              <tr><td><code>/memory</code></td><td>Ver/editar memoria del proyecto</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Ejemplos de uso común</h3>
+          <div class="tabs" role="tablist" aria-label="Ejemplos de uso">
+            <button class="tab-btn" role="tab" aria-selected="true" aria-controls="ex-basic" id="tab-basic">Uso básico</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="ex-ci" id="tab-ci">En CI/CD</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="ex-headless" id="tab-headless">Headless/Scripting</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" role="tabpanel" id="ex-basic" aria-labelledby="tab-basic">
+<pre><code class="language-bash"># Sesión interactiva normal
+claude
+
+# Tarea única sin interacción
+claude -p "Añade tests para user-service.ts"
+
+# Con modelo específico
+claude --model opus -p "Refactoriza este código legacy"
+
+# Limitando herramientas por seguridad
+claude --disallowedTools Bash,Write -p "Solo lee y analiza"</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="ex-ci" aria-labelledby="tab-ci" hidden>
+<pre><code class="language-yaml"># .github/workflows/claude-review.yml
+name: Claude Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Run Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "
+            Revisa este PR para:
+            - Bugs y edge cases
+            - Seguridad
+            - Performance
+            - Convenciones del proyecto
+            Resume en formato markdown.
+          " --allowedTools Read,Bash,Grep,Glob</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="ex-headless" aria-labelledby="tab-headless" hidden>
+<pre><code class="language-bash">#!/bin/bash
+# script: auto-fix-lint.sh
+
+# Ejecutar linter y capturar errores
+ERRORS=$(npm run lint 2>&1 || true)
+
+if [ -n "$ERRORS" ]; then
+  echo "Errores encontrados, pidiendo a Claude que los arregle..."
+  claude -p "
+    Arregla los siguientes errores de lint:
+    $ERRORS
+    
+    Solo modifica archivos necesarios. Ejecuta el linter después para verificar.
+  " --allowedTools Read,Write,Edit,Bash
+fi</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="configuracion" class="doc-section" aria-labelledby="configuracion-heading">
+        <header class="section-header">
+          <h2 id="configuracion-heading">Configuración</h2>
+          <a href="#configuracion" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Archivos de configuración</h3>
+          <p>Claude Code usa varios archivos de configuración con precedencia definida:</p>
+
+          <div class="path-tree" role="tree" aria-label="Jerarquía de archivos de configuración">
+            <div class="path-item" role="treeitem" aria-level="1">
+              <span class="path-icon scope-user" aria-hidden="true"></span>
+              <span class="path-name">~/.claude/settings.json</span>
+              <span class="path-scope scope-user">User (Global)</span>
+            </div>
+            <div class="path-item" role="treeitem" aria-level="1">
+              <span class="path-icon scope-project" aria-hidden="true"></span>
+              <span class="path-name">.claude/settings.json</span>
+              <span class="path-scope scope-project">Project (Local)</span>
+            </div>
+            <div class="path-item" role="treeitem" aria-level="1">
+              <span class="path-icon scope-project" aria-hidden="true"></span>
+              <span class="path-name">.claude/settings.local.json</span>
+              <span class="path-scope scope-project">Project Local (gitignored)</span>
+            </div>
+            <div class="path-item" role="treeitem" aria-level="1">
+              <span class="path-icon scope-workspace" aria-hidden="true"></span>
+              <span class="path-name">CLAUDE.md</span>
+              <span class="path-scope scope-workspace">Workspace (Instrucciones)</span>
+            </div>
+          </div>
+
+          <h3>settings.json — Esquema completo</h3>
+<pre><code class="language-json">{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "sonnet",
+  "permissions": {
+    "allow": ["Read", "Write", "Edit", "Glob", "Grep", "Task", "Bash"],
+    "deny": [],
+    "ask": ["Bash"]
+  },
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "echo 'Ejecutando: $TOOL_INPUT'" }
+        ]
+      }
+    ],
+    "postToolUse": [],
+    "notification": [],
+    "stop": []
+  },
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
+    }
+  },
+  "env": {
+    "CUSTOM_VAR": "value"
+  },
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 30
+}</code></pre>
+
+          <h3>CLAUDE.md — Instrucciones del proyecto</h3>
+          <p>Archivo markdown que proporciona contexto persistente a Claude sobre tu proyecto. Se carga automáticamente al iniciar una sesión en el directorio.</p>
+
+          <h4>Ejemplo completo de CLAUDE.md</h4>
+<pre><code class="language-markdown"># Instrucciones para Claude Code - Mi Proyecto
+
+## Contexto del Proyecto
+Este es un **API REST en Node.js/TypeScript** con Express y PostgreSQL.
+Arquitectura: Clean Architecture + DDD.
+
+## Stack Tecnológico
+- **Runtime**: Node.js 20+ (ESM)
+- **Framework**: Express 4 + TypeScript 5
+- **DB**: PostgreSQL 15 + Prisma ORM
+- **Testing**: Vitest + Supertest
+- **Lint**: ESLint + Prettier + TypeScript strict
+- **CI**: GitHub Actions
+
+## Estructura de Directorios
+src/
+├── domain/          # Entidades, value objects, domain events
+├── application/     # Use cases, DTOs, ports (interfaces)
+├── infrastructure/  # Implementaciones: DB, HTTP, external APIs
+├── presentation/    # Controllers, routes, middleware, schemas
+└── shared/          # Utils, constants, errors, types
+
+## Convenciones de Código
+- **Naming**: camelCase (vars/funciones), PascalCase (tipos/clases), UPPER_SNAKE_CASE (constantes)
+- **Imports**: Agrupados: node_modules → @/ → relativos. Usar alias @/ para src/
+- **Error handling**: Never throw; usar Result<T, E> o Option<T>
+- **Async**: Siempre async/await, nunca .then().catch()
+- **Tests**: Co-located *.test.ts al lado del archivo. AAA pattern.
+
+## Comandos Útiles
+```bash
+npm run dev          # Desarrollo con hot reload
+npm run build        # Compilar TypeScript
+npm run test         # Tests unitarios + integración
+npm run lint         # ESLint + Prettier check
+npm run db:migrate   # Prisma migrate deploy
+npm run db:studio    # Prisma Studio
+```
+
+## Patrones del Proyecto
+- **Use Cases**: Una clase por caso de uso en application/
+- **Repositories**: Interfaces en domain/, impl en infrastructure/
+- **Validation**: Zod schemas en presentation/schemas/
+- **Auth**: JWT en middleware, refresh tokens en httpOnly cookies
+
+## Qué NO hacer
+- ❌ No usar any (usar unknown + type guards)
+- ❌ No acceder a DB directamente en controllers
+- ❌ No poner lógica de negocio en middleware
+- ❌ No commitear .env ni secrets
+
+## Contexto Adicional
+- Base de datos: esquema en prisma/schema.prisma
+- Variables de entorno: ver .env.example
+- API docs: Swagger en /api-docs (dev only)
+- Logs: pino pretty en dev, JSON en prod</code></pre>
+
+          <h3>Orden de precedencia</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Prioridad</th><th>Fuente</th><th>Ámbito</th><th>Persistencia</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1 (más alta)</td><td>Flags CLI (--allowedTools, --model, etc.)</td><td>Sesión actual</td><td>Temporal</td></tr>
+              <tr><td>2</td><td>.claude/settings.local.json</td><td>Proyecto (local)</td><td>Persistente (gitignored)</td></tr>
+              <tr><td>3</td><td>.claude/settings.json</td><td>Proyecto (compartido)</td><td>Persistente (committed)</td></tr>
+              <tr><td>4</td><td>~/.claude/settings.json</td><td>Usuario (global)</td><td>Persistente</td></tr>
+              <tr><td>5 (más baja)</td><td>Defaults de Claude Code</td><td>Sistema</td><td>Built-in</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Variables de entorno útiles</h3>
+<pre><code class="language-bash"># API Key (alternativa a auth login)
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# Modelo por defecto
+export CLAUDE_MODEL="opus"
+
+# Directorio de configuración personalizado
+export CLAUDE_CONFIG_DIR="/custom/path/.claude"
+
+# Deshabilitar telemetría
+export CLAUDE_TELEMETRY=0
+
+# Timeout de herramientas (ms)
+export CLAUDE_TOOL_TIMEOUT=120000</code></pre>
+        </div>
+      </section>
+
+      <section id="agentes" class="doc-section" aria-labelledby="agentes-heading">
+        <header class="section-header">
+          <h2 id="agentes-heading">Agentes y Subagentes</h2>
+          <a href="#agentes" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>¿Qué son los subagentes?</h3>
+          <p>Los <strong>subagentes</strong> son instancias especializadas de Claude que se delegan tareas específicas. Cada subagente tiene su propio contexto, herramientas permitidas y prompt de sistema personalizado.</p>
+
+          <h3>Agentes built-in</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Agente</th><th>Propósito</th><th>Herramientas típicas</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>general-purpose</code></td><td>Tareas generales de investigación y análisis</td><td>Read, Glob, Grep, Bash, WebSearch</td></tr>
+              <tr><td><code>code-reviewer</code></td><td>Revisar código por calidad, seguridad, bugs</td><td>Read, Glob, Grep, Bash</td></tr>
+              <tr><td><code>test-writer</code></td><td>Escribir tests unitarios e integración</td><td>Read, Write, Edit, Bash</td></tr>
+              <tr><td><code>debugger</code></td><td>Depurar errores, traces, logs</td><td>Read, Bash, Grep, Glob</td></tr>
+              <tr><td><code>refactorer</code></td><td>Refactorizar código legacy</td><td>Read, Write, Edit, Bash</td></tr>
+              <tr><td><code>documenter</code></td><td>Generar documentación técnica</td><td>Read, Write, Glob, Grep</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Crear subagentes personalizados</h3>
+          <p>Los subagentes se definen en <code>.claude/agents/<nombre>.md</code>:</p>
+<pre><code class="language-markdown">---
+name: "api-designer"
+description: "Diseña APIs REST/GraphQL siguiendo mejores prácticas"
+tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+model: "opus"
+---
+
+# API Designer Agent
+
+Eres un experto en diseño de APIs. Tu trabajo es:
+
+1. **Analizar requerimientos** y proponer endpoints RESTful
+2. **Definir contratos** con OpenAPI/Swagger
+3. **Validar** consistencia, versionado, paginación, errores
+4. **Generar** código boilerplate (controllers, schemas, types)
+
+## Principios de Diseño
+- Recursos sustantivos, no verbos: GET /users no GET /getUsers
+- Versionado en URL: /v1/users
+- Paginación: cursor-based para colecciones grandes
+- Errores: RFC 7807 Problem Details
+- Rate limiting headers: X-RateLimit-*
+
+## Output Esperado
+- Archivo OpenAPI 3.1 (yaml)
+- Types TypeScript (Zod + inferred types)
+- Controllers Express con validación
+- Tests de contrato básicos</code></pre>
+
+          <h3>Usar subagentes (delegación)</h3>
+<pre><code class="language-bash"># Desde la CLI interactiva
+> Usa el agente api-designer para crear la API de pagos
+
+# O con la herramienta Task directamente
+> /agent api-designer "Crea endpoints para procesar pagos con Stripe"
+
+# Listar agentes disponibles
+> /agents</code></pre>
+
+          <h3>AGENTS.md — Instrucciones para agentes</h3>
+          <p>Archivo que define cómo deben comportarse los agentes en tu proyecto (similar a CLAUDE.md pero para subagentes):</p>
+<pre><code class="language-markdown"># AGENTS.md - Instrucciones para Subagentes
+
+## Reglas Globales para Todos los Agentes
+- Seguir CLAUDE.md del proyecto
+- Usar TypeScript strict, sin any
+- Tests obligatorios para código nuevo
+- Commits convencionales (feat:, fix:, refactor:)
+
+## Agentes Especializados
+
+### code-reviewer
+- Revisar: seguridad, performance, DX, testing
+- Bloquear PR si: no hay tests, hay any, lint falla
+- Sugerir mejoras con ejemplos de código
+
+### test-writer
+- Cobertura mínima: 80% statements, 70% branches
+- Tests: unitarios (vitest), integración (supertest)
+- Mocks: solo para external APIs, no para DB
+
+### refactorer
+- Preservar comportamiento observable
+- Extraer funciones puras
+- Eliminar duplicación (DRY)
+- Actualizar tests afectados</code></pre>
+
+          <h3>Mejores prácticas</h3>
+          <ul>
+            <li><strong>Un agente, una responsabilidad</strong> — No crear agentes "todo en uno"</li>
+            <li><strong>Prompt de sistema claro</strong> — Define objetivo, constraints, output format</li>
+            <li><strong>Herramientas mínimas</strong> — Principio de menor privilegio</li>
+            <li><strong>Modelo apropiado</strong> — Haiku para tareas simples, Opus para razonamiento complejo</li>
+            <li><strong>Versionar agentes</strong> — Guardar en git como parte del proyecto</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="skills" class="doc-section" aria-labelledby="skills-heading">
+        <header class="section-header">
+          <h2 id="skills-heading">Skills (Habilidades)</h2>
+          <a href="#skills" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>¿Qué son las Skills?</h3>
+          <p Las <strong>Skills</strong> son paquetes reutilizables que extienden las capacidades de Claude Code. Cada skill incluye prompts de sistema, herramientas permitidas, y lógica para tareas específicas. Son similares a "plugins" pero más ligeros y enfocados.</p>
+
+          <h3>Estructura de una Skill</h3>
+<pre><code class="language-text">.claude/skills/
+└── mi-skill/
+    ├── SKILL.md          # Manifiesto (requerido)
+    ├── prompts/          # Prompts de sistema
+    │   └── system.md
+    ├── scripts/          # Scripts auxiliares (opcional)
+    │   └── helper.js
+    └── templates/        # Plantillas (opcional)
+        └── component.tsx</code></pre>
+
+          <h3>SKILL.md — Manifiesto</h3>
+<pre><code class="language-markdown">---
+name: "react-component-generator"
+version: "1.0.0"
+description: "Genera componentes React con TypeScript, tests y stories"
+author: "tu-usuario"
+tags: ["react", "typescript", "frontend", "generation"]
+tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+model: "sonnet"
+---
+
+# React Component Generator Skill
+
+Genera componentes React siguiendo las convenciones del proyecto.
+
+## Uso
+```
+/skill react-component-generator "Crea un componente Button con variantes"
+```
+
+## Qué genera
+- Componente principal (Button.tsx)
+- Tests (Button.test.tsx)
+- Storybook (Button.stories.tsx)
+- Estilos (Button.module.css)
+- Export en index.ts
+
+## Convenciones que sigue
+- Props con interface + tipo discriminado para variantes
+- ForwardRef obligatorio
+- classNames con clsx/tailwind-merge
+- Accesibilidad (ARIA, focus-visible)
+- Tests: render, interacción, snapshot visual</code></pre>
+
+          <h3>Descubrimiento y carga</h3>
+          <p>Las skills se descubren en este orden:</p>
+          <ol>
+            <li><code>~/.claude/skills/</code> — Usuario (global)</li>
+            <li><code>.claude/skills/</code> — Proyecto (compartido)</li>
+            <li><code>.claude/skills.local/</code> — Proyecto (local, gitignored)</li>
+          </ol>
+
+          <h3>Comandos de skills</h3>
+<pre><code class="language-bash"># Listar skills disponibles
+/skill list
+
+# Cargar una skill
+/skill load react-component-generator
+
+# Ejecutar skill con parámetros
+/skill react-component-generator "Button con loading state"
+
+# Ver detalles de una skill
+/skill info react-component-generator
+
+# Crear nueva skill (interactivo)
+/skill create mi-nueva-skill</code></pre>
+
+          <h3>Ejemplo: Skill para Code Review Automatizado</h3>
+<pre><code class="language-markdown">---
+name: "auto-code-review"
+version: "1.2.0"
+description: "Revisa PRs automáticamente: seguridad, performance, DX"
+author: "equipo-plataforma"
+tags: ["review", "security", "performance", "ci"]
+tools: ["Read", "Glob", "Grep", "Bash"]
+model: "opus"
+---
+
+# Auto Code Review Skill
+
+Ejecuta revisión completa de un PR o rama.
+
+## Prompt de Sistema (prompts/system.md)
+```
+Eres un Senior Staff Engineer revisando código.
+Enfócate en:
+1. **Seguridad**: SQLi, XSS, secrets, authz, crypto
+2. **Performance**: N+1, memory leaks, bundle size, DB indexes
+3. **DX**: naming, types, error handling, logging
+4. **Testing**: coverage, edge cases, flaky tests
+
+Formato de salida: Markdown con secciones 🔴 Crítico 🟡 Advertencia 🟢 Sugerencia
+Incluye archivo:línea para cada hallazgo.
+```
+
+## Uso en CI
+```yaml
+- name: Auto Code Review
+  run: |
+    claude -p "/skill auto-code-review HEAD~1..HEAD" \
+      --allowedTools Read,Glob,Grep,Bash \
+      --model opus
+```</code></pre>
+
+          <h3>Mejores prácticas</h3>
+          <div class="callout callout-success">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="callout-body">
+              <ul>
+                <li><strong>Naming:</strong> <code>kebab-case</code> para nombre de carpeta y skill</li>
+                <li><strong>Versión:</strong> SemVer en SKILL.md</li>
+                <li><strong>Tools mínimas:</strong> Solo las necesarias</li>
+                <li><strong>Documentar:</strong> README.md en la skill con ejemplos</li>
+                <li><strong>Testear:</strong> Probar con <code>/skill info <name></code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slash-commands" class="doc-section" aria-labelledby="slash-commands-heading">
+        <header class="section-header">
+          <h2 id="slash-commands-heading">Slash Commands</h2>
+          <a href="#slash-commands" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>¿Qué son los Slash Commands?</h3>
+          <p>Los <strong>Slash Commands</strong> son comandos personalizados que se ejecutan dentro de la sesión interactiva de Claude Code escribiendo <code>/</code> seguido del nombre del comando. Permiten automatizar flujos de trabajo repetitivos.</p>
+
+          <h3>Estructura</h3>
+<pre><code class="language-text">.claude/commands/
+├── nombre-comando.md       # Comando simple
+└── namespace/
+    └── subcomando.md       # Comando con namespace</code></pre>
+
+          <h3>Formato del archivo de comando</h3>
+<pre><code class="language-markdown">---
+name: "create-feature"
+description: "Crea una nueva feature completa: código, tests, docs"
+arguments:
+  - name: "feature-name"
+    description: "Nombre de la feature (kebab-case)"
+    required: true
+  - name: "type"
+    description: "Tipo: component, api, hook, page"
+    required: false
+    default: "component"
+---
+
+# Create Feature Command
+
+Crea una feature completa siguiendo las convenciones del proyecto.
+
+## Pasos
+1. Validar que no existe ya
+2. Crear estructura de archivos
+3. Generar código boilerplate
+4. Crear tests básicos
+5. Actualizar exports/index
+6. Ejecutar lint + tests para verificar
+
+## Argumentos
+- <feature-name>: nombre en kebab-case (ej: user-profile)
+- [type]: component | api | hook | page (default: component)
+
+## Ejecución
+```
+> /create-feature user-profile component
+> /create-feature payment-api api
+```</code></pre>
+
+          <h3>Comandos con namespace</h3>
+<pre><code class="language-text">.claude/commands/
+├── deploy.md
+└── db/
+    ├── migrate.md
+    ├── seed.md
+    └── studio.md
+
+# Uso
+> /deploy
+> /db:migrate
+> /db:seed
+> /db:studio</code></pre>
+
+          <h3>Argumentos avanzados</h3>
+<pre><code class="language-markdown">---
+name: "test"
+description: "Ejecuta tests con opciones"
+arguments:
+  - name: "pattern"
+    description: "Patrón de archivos (glob)"
+    required: false
+  - name: "coverage"
+    description: "Generar reporte de cobertura"
+    required: false
+    default: false
+  - name: "watch"
+    description: "Modo watch"
+    required: false
+    default: false
+---
+
+# Test Command
+Ejecuta: npm run test -- {{#if pattern}}--testNamePattern="{{pattern}}"{{/if}} {{#if coverage}}--coverage{{/if}} {{#if watch}}--watch{{/if}}</code></pre>
+
+          <h3>Ejemplos prácticos</h3>
+          <div class="tabs" role="tablist" aria-label="Ejemplos de slash commands">
+            <button class="tab-btn" role="tab" aria-selected="true" aria-controls="cmd-git" id="tab-git">Git Workflow</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="cmd-db" id="tab-db">Database</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="cmd-release" id="tab-release">Release</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" role="tabpanel" id="cmd-git" aria-labelledby="tab-git">
+<pre><code class="language-markdown">---
+name: "commit"
+description: "Crea commit convencional con mensaje generado"
+arguments:
+  - name: "type"
+    description: "feat|fix|refactor|docs|test|chore"
+    required: true
+  - name: "scope"
+    description: "Ámbito opcional (auth, api, ui...)"
+    required: false
+  - name: "message"
+    description: "Mensaje breve"
+    required: true
+---
+
+# Commit Command
+git add -A
+git commit -m "{{type}}{{#if scope}}({{scope}}){{/if}}: {{message}}"
+git push</code></pre>
+<pre><code class="language-markdown">---
+name: "pr"
+description: "Crea PR con template y reviewers"
+arguments:
+  - name: "title"
+    description: "Título del PR"
+    required: true
+  - name: "base"
+    description: "Rama base"
+    required: false
+    default: "main"
+---
+
+# PR Command
+gh pr create --title "{{title}}" --base "{{base}}" \
+  --body-file .github/PULL_REQUEST_TEMPLATE.md \
+  --reviewer @equipo-backend @equipo-frontend</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="cmd-db" aria-labelledby="tab-db" hidden>
+<pre><code class="language-markdown">---
+name: "db:migrate"
+description: "Ejecuta migraciones de Prisma"
+arguments:
+  - name: "name"
+    description: "Nombre de la migración (opcional)"
+    required: false
+---
+
+# DB Migrate
+{{#if name}}
+npx prisma migrate dev --name "{{name}}"
+{{else}}
+npx prisma migrate deploy
+{{/if}}
+npx prisma generate</code></pre>
+<pre><code class="language-markdown">---
+name: "db:seed"
+description: "Ejecuta seed de la base de datos"
+---
+
+# DB Seed
+npx prisma db seed
+echo "✅ Seed completado"</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="cmd-release" aria-labelledby="tab-release" hidden>
+<pre><code class="language-markdown">---
+name: "release"
+description: "Crea release: version bump, changelog, tag, publish"
+arguments:
+  - name: "version"
+    description: "patch|minor|major|version exacta"
+    required: true
+---
+
+# Release Command
+# 1. Bump version
+npm version {{version}} --no-git-tag-version
+
+# 2. Generate changelog
+npx conventional-changelog -p angular -i CHANGELOG.md -s
+
+# 3. Commit & tag
+git add package.json CHANGELOG.md
+git commit -m "chore: release v{{version}}"
+git tag -a "v{{version}}" -m "Release v{{version}}"
+
+# 4. Push
+git push origin main --tags
+
+# 5. Publish (si aplica)
+npm publish</code></pre>
+            </div>
+          </div>
+
+          <h3>Descubrimiento y precedencia</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Prioridad</th><th>Ubicación</th><th>Ámbito</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>.claude/commands/ (proyecto)</td><td>Proyecto</td></tr>
+              <tr><td>2</td><td>~/.claude/commands/ (usuario)</td><td>Global</td></tr>
+              <tr><td>3</td><td>Built-in</td><td>Sistema</td></tr>
+            </tbody>
+          </table>
+          <p>Los comandos del proyecto <strong>sobrescriben</strong> a los del usuario si tienen el mismo nombre.</p>
+        </div>
+      </section>
+
+      <section id="hooks" class="doc-section" aria-labelledby="hooks-heading">
+        <header class="section-header">
+          <h2 id="hooks-heading">Hooks</h2>
+          <a href="#hooks" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>¿Qué son los Hooks?</h3>
+          <p>Los <strong>Hooks</strong> son scripts que se ejecutan automáticamente en puntos específicos del ciclo de vida de Claude Code. Permiten automatizar validaciones, logging, notificaciones, y modificaciones de comportamiento sin cambiar el código principal.</p>
+
+          <h3>Tipos de Hooks</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Evento</th><th>Cuándo se ejecuta</th><th>Casos de uso</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>preToolUse</code></td><td>Antes de ejecutar cualquier herramienta</td><td>Validar inputs, logging, bloquear operaciones peligrosas</td></tr>
+              <tr><td><code>postToolUse</code></td><td>Después de ejecutar una herramienta</td><td>Logging, métricas, notificaciones, auto-formateo</td></tr>
+              <tr><td><code>notification</code></td><td>Cuando Claude envía notificación al usuario</td><td>Sonido, desktop notification, webhook a Slack/Discord</td></tr>
+              <tr><td><code>stop</code></td><td>Cuando la sesión termina (exit, compact, error)</td><td>Cleanup, guardar estado, métricas de sesión</td></tr>
+              <tr><td><code>userPromptSubmit</code></td><td>Cuando el usuario envía un prompt</td><td>Validar prompt, inyectar contexto, rate limiting</td></tr>
+              <tr><td><code>sessionStart</code></td><td>Al iniciar una nueva sesión</td><td>Cargar contexto, verificar config, health checks</td></tr>
+              <tr><td><code>preCompact</code></td><td>Antes de compactar el contexto</td><td>Guardar información importante, backup</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Configuración en settings.json</h3>
+<pre><code class="language-json">{
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🔧 Ejecutando: $TOOL_INPUT' >> ~/.claude/hooks.log"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/validate-bash.js '$TOOL_INPUT'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/auto-format.js '$TOOL_INPUT'"
+          }
+        ]
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-test-failures.js"
+          }
+        ]
+      }
+    ],
+    "notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' '$NOTIFICATION_MESSAGE'"
+          }
+        ]
+      }
+    ],
+    "stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/session-summary.js"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+          <h3>Variables de entorno en hooks</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Variable</th><th>Descripción</th><th>Disponible en</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>$TOOL_NAME</code></td><td>Nombre de la herramienta (Read, Write, Bash, etc.)</td><td>preToolUse, postToolUse</td></tr>
+              <tr><td><code>$TOOL_INPUT</code></td><td>Input JSON de la herramienta</td><td>preToolUse, postToolUse</td></tr>
+              <tr><td><code>$TOOL_OUTPUT</code></td><td>Output JSON de la herramienta</td><td>postToolUse</td></tr>
+              <tr><td><code>$SESSION_ID</code></td><td>ID único de la sesión</td><td>Todos</td></tr>
+              <tr><td><code>$NOTIFICATION_MESSAGE</code></td><td>Mensaje de la notificación</td><td>notification</td></tr>
+              <tr><td><code>$STOP_REASON</code></td><td>Razón de parada (exit, compact, error)</td><td>stop</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Ejemplos de hooks útiles</h3>
+          <div class="tabs" role="tablist" aria-label="Ejemplos de hooks">
+            <button class="tab-btn" role="tab" aria-selected="true" aria-controls="hook-security" id="tab-hook-security">Seguridad</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="hook-format" id="tab-hook-format">Auto-formateo</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="hook-notify" id="tab-hook-notify">Notificaciones</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="hook-metrics" id="tab-hook-metrics">Métricas</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" role="tabpanel" id="hook-security" aria-labelledby="tab-hook-security">
+<pre><code class="language-javascript">
+// .claude/hooks/validate-bash.js
+// Bloquea comandos peligrosos en Bash
+
+const DANGEROUS_PATTERNS = [
+  /rm\s+-rf\s+\//,           // rm -rf /
+  /dd\s+if=.*of=\/dev\/sd/,  // dd a disco
+  />\s*\/etc\/passwd/,        // Escribir passwd
+  /chmod\s+777\s+\//,        // chmod 777 /
+  /curl.*\|\s*bash/,         // curl | bash
+  /wget.*\|\s*bash/,         // wget | bash
+];
+
+const input = JSON.parse(process.env.TOOL_INPUT);
+const command = input.command || '';
+
+for (const pattern of DANGEROUS_PATTERNS) {
+  if (pattern.test(command)) {
+    console.error(`🚫 Bloqueado: comando peligroso detectado`);
+    console.error(`Comando: ${command}`);
+    process.exit(2); // Exit code 2 = bloquear herramienta
+  }
+}
+</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="hook-format" aria-labelledby="tab-hook-format" hidden>
+<pre><code class="language-javascript">
+// .claude/hooks/auto-format.js
+// Formatea automáticamente archivos tras Write/Edit
+
+const fs = require('fs');
+const { execSync } = require('child_process');
+
+const input = JSON.parse(process.env.TOOL_INPUT);
+const filePath = input.filePath || input.path;
+
+if (!filePath) process.exit(0);
+
+const ext = filePath.split('.').pop();
+const formatters = {
+  'ts': 'npx prettier --write',
+  'tsx': 'npx prettier --write',
+  'js': 'npx prettier --write',
+  'jsx': 'npx prettier --write',
+  'json': 'npx prettier --write',
+  'css': 'npx prettier --write',
+  'md': 'npx prettier --write',
+  'py': 'ruff format',
+  'rs': 'rustfmt',
+  'go': 'gofmt -w',
+};
+
+const formatter = formatters[ext];
+if (formatter && fs.existsSync(filePath)) {
+  try {
+    execSync(`${formatter} "${filePath}"`, { stdio: 'inherit' });
+    console.log(`✨ Formateado: ${filePath}`);
+  } catch (e) {
+    console.error(`⚠️ Error formateando ${filePath}:`, e.message);
+  }
+}
+</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="hook-notify" aria-labelledby="tab-hook-notify" hidden>
+<pre><code class="language-javascript">
+// .claude/hooks/notify-slack.js
+// Envía notificaciones a Slack webhook
+
+const WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+if (!WEBHOOK_URL) process.exit(0);
+
+const message = process.env.NOTIFICATION_MESSAGE;
+const sessionId = process.env.SESSION_ID?.slice(0, 8);
+
+const payload = {
+  text: `🤖 Claude Code [${sessionId}]`,
+  blocks: [
+    { type: "section", text: { type: "mrkdwn", text: `*Claude Code* \`${sessionId}\`` }},
+    { type: "section", text: { type: "mrkdwn", text: message }},
+  ]
+};
+
+fetch(WEBHOOK_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+}).catch(console.error);
+</code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="hook-metrics" aria-labelledby="tab-hook-metrics" hidden>
+<pre><code class="language-javascript">
+// .claude/hooks/session-summary.js
+// Genera resumen de sesión al terminar
+
+const fs = require('fs');
+const path = require('path');
+
+const LOG_FILE = path.join(process.env.HOME, '.claude', 'session-metrics.jsonl');
+const sessionId = process.env.SESSION_ID;
+const stopReason = process.env.STOP_REASON;
+
+// Leer métricas acumuladas (simplificado)
+const metrics = {
+  sessionId,
+  timestamp: new Date().toISOString(),
+  stopReason,
+  toolsUsed: {}, // Se poblaría desde postToolUse
+  duration: 0,   // Se calcularía desde sessionStart
+};
+
+fs.appendFileSync(LOG_FILE, JSON.stringify(metrics) + '\n');
+
+// Reporte semanal (ejecutar via cron)
+if (stopReason === 'exit') {
+  console.log(`
+📊 Resumen de sesión ${sessionId.slice(0,8)}
+   Duración: ${Math.round(metrics.duration/60000)} min
+   Razón: ${stopReason}
+   Herramientas: ${Object.keys(metrics.toolsUsed).length} tipos
+  `);
+}
+</code></pre>
+            </div>
+          </div>
+
+          <h3>Debugging hooks</h3>
+<pre><code class="language-bash"># Ver hooks configurados
+claude config get hooks
+
+# Ejecutar hook manualmente para test
+TOOL_NAME=Bash TOOL_INPUT='{"command":"ls"}' node .claude/hooks/validate-bash.js
+
+# Logs de hooks (stdout/stderr van al terminal de Claude)
+claude --verbose 2>&1 | grep -i hook</code></pre>
+
+          <div class="callout callout-warning">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="callout-body">
+              <strong>Cuidado:</strong> Los hooks se ejecutan en <strong>cada</strong> invocación de herramienta. Hooks lentos o con bugs degradan severamente la UX. Mantén hooks < 100ms. Usa <code>process.exit(2)</code> en preToolUse para bloquear.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mcp" class="doc-section" aria-labelledby="mcp-heading">
+        <header class="section-header">
+          <h2 id="mcp-heading">MCP (Model Context Protocol)</h2>
+          <a href="#mcp" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>¿Qué es MCP?</h3>
+          <p><strong>Model Context Protocol (MCP)</strong> es un estándar abierto que permite a Claude Code conectarse a servidores externos para acceder a datos, herramientas y recursos. Funciona como "plugins" pero con un protocolo estandarizado basado en JSON-RPC 2.0.</p>
+
+          <h3>Configuración de servidores MCP</h3>
+          <p>En <code>settings.json</code> (user o project):</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/db"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/dir"]
+    },
+    "custom-server": {
+      "command": "python",
+      "args": ["/path/to/mcp-server.py"],
+      "env": { "API_KEY": "${CUSTOM_API_KEY}" }
+    }
+  }
+}</code></pre>
+
+          <h3>Servidores MCP oficiales recomendados</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Servidor</th><th>Paquete</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>GitHub</strong></td><td><code>@modelcontextprotocol/server-github</code></td><td>Repos, issues, PRs, actions, search</td></tr>
+              <tr><td><strong>GitLab</strong></td><td><code>@modelcontextprotocol/server-gitlab</code></td><td>GitLab API completo</td></tr>
+              <tr><td><strong>Filesystem</strong></td><td><code>@modelcontextprotocol/server-filesystem</code></td><td>Leer/escribir archivos en directorio permitido</td></tr>
+              <tr><td><strong>PostgreSQL</strong></td><td><code>@modelcontextprotocol/server-postgres</code></td><td>Query, schema, migraciones</td></tr>
+              <tr><td><strong>SQLite</strong></td><td><code>@modelcontextprotocol/server-sqlite</code></td><td>Bases de datos locales</td></tr>
+              <tr><td><strong>Redis</strong></td><td><code>@modelcontextprotocol/server-redis</code></td><td>Cache, pub/sub, keys</td></tr>
+              <tr><td><strong>Docker</strong></td><td><code>@modelcontextprotocol/server-docker</code></td><td>Containers, images, compose</td></tr>
+              <tr><td><strong>Kubernetes</strong></td><td><code>@modelcontextprotocol/server-kubernetes</code></td><td>Cluster resources, logs, exec</td></tr>
+              <tr><td><strong>Puppeteer</strong></td><td><code>@modelcontextprotocol/server-puppeteer</code></td><td>Browser automation, scraping, screenshots</td></tr>
+              <tr><td><strong>Memory</strong></td><td><code>@modelcontextprotocol/server-memory</code></td><td>Knowledge graph persistente</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Comandos MCP en sesión</h3>
+<pre><code class="language-bash"># Listar servidores configurados
+/mcp
+
+# Ver estado de conexión
+/mcp status
+
+# Reconectar servidor
+/mcp reconnect github
+
+# Ver herramientas disponibles de un servidor
+/mcp tools github
+
+# Llamar herramienta directamente
+/mcp call github list_repos --org mi-org</code></pre>
+
+          <h3>Crear servidor MCP personalizado (Python)</h3>
+<pre><code class="language-python">
+# mcp-server.py
+# pip install mcp[cli]
+
+from mcp.server import Server
+from mcp.server.models import InitializationOptions
+from mcp.types import Tool, TextContent
+import asyncio
+
+server = Server("mi-servidor-personalizado")
+
+@server.list_tools()
+async def list_tools() -> list[Tool]:
+    return [
+        Tool(
+            name="saludar",
+            description="Saluda a alguien",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "nombre": {"type": "string", "description": "Nombre a saludar"}
+                },
+                "required": ["nombre"]
+            }
+        ),
+        Tool(
+            name="obtener_datos",
+            description="Obtiene datos de mi API interna",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "endpoint": {"type": "string"},
+                    "params": {"type": "object"}
+                },
+                "required": ["endpoint"]
+            }
+        )
+    ]
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+    if name == "saludar":
+        return [TextContent(type="text", text=f"¡Hola, {arguments['nombre']}! 👋")]
+    
+    if name == "obtener_datos":
+        # Llamada real a tu API
+        import httpx
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(f"https://api.miempresa.com/{arguments['endpoint']}", params=arguments.get('params'))
+            return [TextContent(type="text", text=resp.text)]
+    
+    raise ValueError(f"Herramienta desconocida: {name}")
+
+async def main():
+    from mcp.server.stdio import stdio_server
+    async with stdio_server() as (read, write):
+        await server.run(read, write, InitializationOptions(
+            server_name="mi-servidor",
+            server_version="1.0.0",
+            capabilities=server.get_capabilities()
+        ))
+
+if __name__ == "__main__":
+    asyncio.run(main())
+</code></pre>
+
+          <h3>Configurar servidor personalizado</h3>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "mi-servidor": {
+      "command": "python",
+      "args": ["/ruta/absoluta/mcp-server.py"],
+      "env": {
+        "API_BASE_URL": "https://api.miempresa.com",
+        "API_KEY": "${MI_API_KEY}"
+      }
+    }
+  }
+}</code></pre>
+
+          <h3>Troubleshooting MCP</h3>
+          <div class="callout callout-danger">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <div class="callout-body">
+              <h4>Problemas comunes</h4>
+              <ul>
+                <li><strong>Servidor no conecta:</strong> Verifica que el comando existe en PATH. Usa rutas absolutas.</li>
+                <li><strong>Timeout:</strong> Aumenta timeout en settings: <code>"mcpTimeout": 60000</code></li>
+                <li><strong>Permisos:</strong> El proceso heredado debe tener permisos para leer/env vars.</li>
+                <li><strong>Variables de entorno:</strong> Usa <code>${VAR}</code> en settings.json, se expanden al iniciar.</li>
+                <li><strong>Stdout/stderr:</strong> El servidor MCP debe usar <strong>stdout solo para JSON-RPC</strong>. Logs a stderr.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Debugging</h3>
+<pre><code class="language-bash"># Ver logs de conexión MCP
+claude --verbose 2>&1 | grep -i mcp
+
+# Test manual de servidor
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | python mcp-server.py
+
+# Listar herramientas de servidor corriendo
+/mcp tools nombre-servidor</code></pre>
+        </div>
+      </section>
+
+      <section id="prompting-avanzado" class="doc-section" aria-labelledby="prompting-avanzado-heading">
+        <header class="section-header">
+          <h2 id="prompting-avanzado-heading">Prompting Avanzado</h2>
+          <a href="#prompting-avanzado" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Principios fundamentales</h3>
+          <ul>
+            <li><strong>Sé específico</strong> — Contexto, constraints, formato de salida esperado</li>
+            <li><strong>Divide y vencerás</strong> — Tareas complejas → subtareas secuenciales</li>
+            <li><strong>Proporciona ejemplos</strong> — Few-shot prompting supera zero-shot</li>
+            <li><strong>Itera</strong> — Refina el prompt basado en resultados</li>
+          </ul>
+
+          <h3>Chain-of-Thought (CoT)</h3>
+          <p>Fuerza a Claude a razonar paso a paso antes de responder:</p>
+<pre><code class="language-markdown">Analiza este problema paso a paso:
+
+1. Entiende el requerimiento
+2. Identifica constraints y edge cases
+3. Propón aproximación
+4. Implementa
+5. Verifica con tests
+
+Piensa en voz alta (reasoning) antes de dar la respuesta final.</code></pre>
+
+          <h3>XML Tags para estructurar prompts</h3>
+          <p>Usa tags XML para separar claramente contexto, instrucciones, ejemplos y salida:</p>
+<pre><code class="language-markdown">
+<instructions>
+Eres un experto en TypeScript. Genera código que:
+- Use tipos estrictos (no any)
+- Siga principios SOLID
+- Incluya tests unitarios
+- Sea production-ready
+</instructions>
+
+<context>
+Archivo actual: src/services/user-service.ts
+Stack: Node 20, Express, Prisma, Zod
+Patrón: Repository + Use Case
+</context>
+
+<examples>
+<example>
+<input>Crear usuario con email único</input>
+<output>
+// user-service.ts
+async create(data: CreateUserDto): Promise<Result<User, AppError>> {
+  const existing = await this.userRepo.findByEmail(data.email);
+  if (existing) return Err(new AppError('EMAIL_EXISTS', 409));
+  return Ok(await this.userRepo.create(data));
+}
+</output>
+</example>
+</examples>
+
+<task>
+Implementa: Soft delete para usuarios (campo deletedAt, filtro automático)
+</task>
+
+<output_format>
+Responde SOLO con el código TypeScript completo.
+Sin explicaciones, sin markdown, sin comentarios innecesarios.
+</output_format></code></pre>
+
+          <h3>System Prompts personalizados</h3>
+          <p>Define comportamiento persistente via <code>CLAUDE.md</code> o <code>AGENTS.md</code>:</p>
+<pre><code class="language-markdown">
+# En CLAUDE.md o AGENTS.md
+
+## System Prompt para este proyecto
+Siempre que generes código:
+1. TypeScript strict mode - NUNCA uses any
+2. Result<T, E> para manejo de errores (nunca throw)
+3. Tests co-located (*.test.ts) con cobertura >80%
+4. Commits: conventional commits (feat:, fix:, refactor:)
+5. Documenta APIs complejas con JSDoc</code></pre>
+
+          <h3>Patrones de prompting efectivos</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Patrón</th><th>Cuándo usar</th><th>Ejemplo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Role + Task</strong></td><td>Tareas específicas con expertise</td><td>"Como senior backend engineer, diseña..."</td></tr>
+              <tr><td><strong>Few-shot</strong></td><td>Formato de salida específico</td><td>Da 2-3 ejemplos input→output</td></tr>
+              <tr><td><strong>Chain-of-Thought</strong></td><td>Razonamiento complejo</td><td>"Piensa paso a paso..."</td></tr>
+              <tr><td><strong>Constraint-first</strong></td><td>Reglas estrictas</td><td>"NO uses X, SIEMPRE usa Y"</td></tr>
+              <tr><td><strong>Iterative refinement</strong></td><td>Tareas grandes</td><td>"Haz X, luego revisa, luego mejora Y"</td></tr>
+              <tr><td><strong>Self-critique</strong></td><td>Calidad alta</td><td>"Critica tu propia respuesta antes de enviar"</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Ejemplos de prompts para tareas comunes</h3>
+          <div class="tabs" role="tablist" aria-label="Ejemplos de prompts">
+            <button class="tab-btn" role="tab" aria-selected="true" aria-controls="prompt-refactor" id="tab-prompt-refactor">Refactor</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="prompt-test" id="tab-prompt-test">Tests</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="prompt-debug" id="tab-prompt-debug">Debug</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="prompt-docs" id="tab-prompt-docs">Docs</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" role="tabpanel" id="prompt-refactor" aria-labelledby="tab-prompt-refactor">
+<pre><code class="language-markdown">
+<role>Senior TypeScript Engineer especializado en refactoring</role>
+
+<task>
+Refactoriza este código legacy para:
+1. Eliminar duplicación (DRY)
+2. Mejorar tipado (quitar any)
+3. Separar responsabilidades (SRP)
+4. Hacerlo testeable (dependency injection)
+</task>
+
+<constraints>
+- NO cambies la API pública
+- Mantén compatibilidad hacia atrás
+- Cobertura de tests ≥ 80%
+- Usa patrones del proyecto (Repository, UseCase)
+</constraints>
+
+<context>
+Archivo: src/legacy/order-processor.ts
+Tests actuales: src/legacy/order-processor.test.ts (cobertura 45%)
+</context>
+
+<output>
+1. Análisis de debt técnico encontrado
+2. Plan de refactoring paso a paso
+3. Código refactorizado completo
+4. Tests actualizados
+</output></code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="prompt-test" aria-labelledby="tab-prompt-test" hidden>
+<pre><code class="language-markdown">
+<role>Test Engineer experto en Vitest + Testing Library</role>
+
+<task>
+Escribe tests comprehensivos para: src/services/payment-service.ts
+</task>
+
+<requirements>
+- Cobertura: statements 90%, branches 80%, functions 90%, lines 90%
+- Casos: happy path, edge cases, error handling, boundary values
+- Mocks: SOLO external APIs (Stripe, email), NO database
+- Patrones: AAA (Arrange, Act, Assert), describe/it anidados
+- Nombres: "should [expected behavior] when [condition]"
+</requirements>
+
+<context>
+Métodos a testear:
+- processPayment(dto): Promise<Result<Payment, PaymentError>>
+- refund(paymentId, amount): Promise<Result<Refund, RefundError>>
+- getPaymentStatus(id): Promise<PaymentStatus>
+</context>
+
+<output>
+Tests completos en src/services/payment-service.test.ts
+</output></code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="prompt-debug" aria-labelledby="tab-prompt-debug" hidden>
+<pre><code class="language-markdown">
+<role>Debugger experto en Node.js/TypeScript</role>
+
+<task>
+Diagnostica y arregla este error:
+</task>
+
+<error>
+TypeError: Cannot read properties of undefined (reading 'id')
+    at PaymentService.processPayment (payment-service.ts:42:15)
+</error>
+
+<context>
+- Stack trace completo adjunto
+- Código relevante: payment-service.ts líneas 35-50
+- Tests que fallan: payment-service.test.ts
+- Logs de producción: error ocurre al procesar webhook de Stripe
+</context>
+
+<approach>
+1. Reproduce el error con test mínimo
+2. Identifica root cause (race condition? null check faltante? mock incorrecto?)
+3. Propón fix mínimo
+4. Verifica con tests existentes + nuevo test de regresión
+</approach>
+
+<output>
+1. Root cause analysis
+2. Fix propuesto (diff)
+3. Test de regresión
+</output></code></pre>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="prompt-docs" aria-labelledby="tab-prompt-docs" hidden>
+<pre><code class="language-markdown">
+<role>Technical Writer especializado en API docs</role>
+
+<task>
+Genera documentación OpenAPI 3.1 para los endpoints en src/presentation/routes/
+</task>
+
+<requirements>
+- OpenAPI 3.1 + JSON Schema 2020-12
+- Ejemplos de request/response para cada endpoint
+- Códigos de error documentados (RFC 7807)
+- Security schemes: BearerAuth (JWT), ApiKeyAuth
+- Servidores: dev, staging, prod
+- Tags organizados por dominio
+</requirements>
+
+<context>
+Routes: userRoutes.ts, orderRoutes.ts, paymentRoutes.ts
+Schemas Zod en: src/presentation/schemas/
+Auth: JWT en Authorization header
+</context>
+
+<output>
+Archivo: docs/openapi.yaml
+</output></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="doc-section" aria-labelledby="workflow-heading">
+        <header class="section-header">
+          <h2 id="workflow-heading">Workflow & Best Practices</h2>
+          <a href="#workflow" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Git Workflow con Claude Code</h3>
+          <pre><code class="language-bash"># 1. Rama para feature
+git checkout -b feat/nueva-funcionalidad
+
+# 2. Trabajo con Claude (commits atómicos)
+claude -p "Implementa login con JWT"
+# ... Claude hace cambios, tests, lint ...
+
+# 3. Revisar cambios
+git diff
+git status
+
+# 4. Commit convencional
+git add -A
+git commit -m "feat(auth): add JWT login with refresh tokens"
+
+# 5. Push y PR
+git push origin feat/nueva-funcionalidad
+gh pr create --fill</code></pre>
+
+          <h3>Convenciones de commit (Conventional Commits)</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Tipo</th><th>Descripción</th><th>Ejemplo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>feat</code></td><td>Nueva funcionalidad</td><td>feat(api): add user endpoints</td></tr>
+              <tr><td><code>fix</code></td><td>Bug fix</td><td>fix(auth): handle expired refresh token</td></tr>
+              <tr><td><code>refactor</code></td><td>Refactoring sin cambio de comportamiento</td><td>refactor(services): extract payment logic</td></tr>
+              <tr><td><code>docs</code></td><td>Documentación</td><td>docs: update API reference</td></tr>
+              <tr><td><code>test</code></td><td>Añadir/modificar tests</td><td>test(payment): add refund edge cases</td></tr>
+              <tr><td><code>chore</code></td><td>Mantenimiento, deps, config</td><td>chore: update dependencies</td></tr>
+              <tr><td><code>perf</code></td><td>Performance</td><td>perf(db): add index on user_email</td></tr>
+              <tr><td><code>style</code></td><td>Formato, lint (sin lógica)</td><td>style: prettier format</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Testing Strategy</h3>
+          <ul>
+            <li><strong>Unit tests</strong> — Lógica pura, use cases, utils (vitest, rápido)</li>
+            <li><strong>Integration tests</strong> — API endpoints, DB, external services (supertest, testcontainers)</li>
+            <li><strong>Contract tests</strong> — Schemas OpenAPI, eventos (pact)</li>
+            <li><strong>E2E tests</strong> — Flujos críticos usuario (playwright, selectivo)</li>
+          </ul>
+
+          <h3>CI/CD Pipeline recomendado</h3>
+<pre><code class="language-yaml"># .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test -- --coverage
+      - uses: codecov/codecov-action@v3
+
+  claude-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Claude Code Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "
+            Revisa este PR para:
+            - Bugs y security issues
+            - Performance problems
+            - Code quality y conventions
+            - Test coverage gaps
+            Output: markdown con 🔴🟡🟢
+          " --allowedTools Read,Glob,Grep,Bash --model opus
+        continue-on-error: true</code></pre>
+
+          <h3>Mejores prácticas de productividad</h3>
+          <div class="callout callout-tip">
+            <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="callout-body">
+              <ul>
+                <li><strong>Sesiones cortas</strong> — Reinicia contexto frecuente (/clear) para evitar alucinaciones</li>
+                <li><strong>Contexto mínimo</strong> — Usa /compact antes de tareas largas</li>
+                <li><strong>Slash commands</strong> — Automatiza tareas repetitivas (deploy, test, lint)</li>
+                <li><strong>Subagentes</strong> — Delega investigación, testing, debugging a agentes especializados</li>
+                <li><strong>Hooks</strong> — Auto-formateo, validaciones, notificaciones</li>
+                <li><strong>MCP</strong> — Conecta a tu infraestructura real (DB, K8s, GitHub)</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Estructura de proyecto recomendada</h3>
+<pre><code class="language-text">mi-proyecto/
+├── .claude/
+│   ├── settings.json          # Config proyecto (committed)
+│   ├── settings.local.json    # Config local (gitignored)
+│   ├── commands/              # Slash commands del proyecto
+│   ├── agents/                # Subagentes personalizados
+│   ├── skills/                # Skills del proyecto
+│   └── hooks/                 # Scripts de hooks
+├── CLAUDE.md                  # Instrucciones para Claude (committed)
+├── AGENTS.md                  # Instrucciones para subagentes (committed)
+├── .github/
+│   └── workflows/             # CI/CD
+├── src/                       # Código fuente
+├── tests/                     # Tests (o co-located)
+├── docs/                      # Documentación
+├── package.json
+└── README.md</code></pre>
+        </div>
+      </section>
+
+      <section id="troubleshooting" class="doc-section" aria-labelledby="troubleshooting-heading">
+        <header class="section-header">
+          <h2 id="troubleshooting-heading">Troubleshooting & FAQ</h2>
+          <a href="#troubleshooting" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Errores comunes y soluciones</h3>
+          
+          <details class="faq-item">
+            <summary><strong>Error: "Authentication failed" / "Invalid API key"</strong></summary>
+            <div class="faq-answer">
+              <p>Causas y soluciones:</p>
+              <ol>
+                <li>Ejecutar <code>claude auth logout && claude auth login</code></li>
+                <li>Verificar que la cuenta tiene acceso a la API de Anthropic</li>
+                <li>Si usas <code>ANTHROPIC_API_KEY</code>, verificar que es válida y no ha expirado</li>
+                <li>Comprobar conectividad de red / proxy corporativo</li>
+              </ol>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Error: "Tool use blocked by permissions"</strong></summary>
+            <div class="faq-answer">
+              <p>La herramienta está en la lista <code>deny</code> o no está en <code>allow</code>.</p>
+              <pre><code class="language-bash"># Ver permisos actuales
+claude config get permissions
+
+# Permitir herramienta temporalmente
+claude --allowedTools Bash,Write
+
+# O en settings.json
+{
+  "permissions": { "allow": ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Task"] }
+}</code></pre>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Error: "MCP server failed to start" / "Connection refused"</strong></summary>
+            <div class="faq-answer">
+              <ol>
+                <li>Verificar que el comando existe: <code>which npx</code> o ruta absoluta</li>
+                <li>Probar manualmente: <code>npx -y @modelcontextprotocol/server-github</code></li>
+                <li>Verificar variables de entorno (tokens, URLs)</li>
+                <li>Revisar logs: <code>claude --verbose 2>&1 | grep -i mcp</code></li>
+                <li>Aumentar timeout: <code>"mcpTimeout": 60000</code> en settings.json</li>
+              </ol>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Error: "Context window exceeded" / Respuestas truncadas</strong></summary>
+            <div class="faq-answer">
+              <p>El contexto de la sesión es demasiado grande.</p>
+              <ul>
+                <li>Usar <code>/compact</code> para resumir historial</li>
+                <li>Usar <code>/clear</code> para limpiar completamente</li>
+                <li>Dividir tarea en sesiones separadas</li>
+                <li>Usar <code>--disallowedTools</code> para limitar herramientas que generan mucho output</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Error: Hooks lentos / Timeouts en herramientas</strong></summary>
+            <div class="faq-answer">
+              <p>Los hooks se ejecutan en CADA invocación de herramienta.</p>
+              <ul>
+                <li>Hooks deben completarse en < 100ms</li>
+                <li>Evita I/O de red/disco en hooks <code>preToolUse</code></li>
+                <li>Usa <code>postToolUse</code> para operaciones pesadas</li>
+                <li>Deshabilita hooks problemáticos temporalmente: <code>"hooks": { "preToolUse": [] }</code></li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Error: "Command not found: claude" tras instalar</strong></summary>
+            <div class="faq-answer">
+              <p>El binario no está en PATH.</p>
+              <ul>
+                <li><code>npm</code>: <code>npm root -g</code> → agregar a PATH</li>
+                <li>Reiniciar terminal / shell</li>
+                <li>Usar <code>npx claude-code</code> como alternativa</li>
+              </ul>
+            </div>
+          </details>
+
+          <h3>Performance tips</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Problema</th><th>Solución</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Respuestas lentas</td><td>Usar modelo <code>haiku</code> para tareas simples, <code>sonnet</code> por defecto</td></tr>
+              <tr><td>Mucho output en terminal</td><td><code>--disallowedTools Bash</code> o limitar <code>Bash</code> a comandos específicos</td></tr>
+              <tr><td>Context overflow</td><td><code>/compact</code> frecuente, sesiones cortas, <code>--allowedTools</code> minimal</td></tr>
+              <tr><td>MCP lento</td><td>Verificar latencia de red, usar servidores locales cuando sea posible</td></tr>
+              <tr><td>Hooks degradan UX</td><td>Mover lógica pesada a <code>postToolUse</code>, cachear resultados</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Debugging avanzado</h3>
+<pre><code class="language-bash"># Verbose logging
+claude --verbose 2>&1 | tee claude-debug.log
+
+# Doctor (diagnóstico completo)
+claude doctor
+
+# Ver configuración efectiva
+claude config list
+
+# Test de conectividad API
+curl -H "Authorization: Bearer $ANTHROPIC_API_KEY" \
+  https://api.anthropic.com/v1/messages \
+  -d '{"model":"claude-3-haiku-20240307","max_tokens":10,"messages":[{"role":"user","content":"hi"}]}'
+
+# Reset completo (cuidado: borra config)
+rm -rf ~/.claude
+claude auth login</code></pre>
+
+          <h3>FAQ Rápida</h3>
+          <dl class="faq-list">
+            <dt>¿Puedo usar Claude Code offline?</dt>
+            <dd>No. Requiere conexión a la API de Anthropic.</dd>
+            
+            <dt>¿Cuánto cuesta?</dt>
+            <dd>Basado en tokens consumidos (input + output). Ver <code>/cost</code> en sesión. Modelos: Opus > Sonnet > Haiku.</dd>
+            
+            <dt>¿Mis datos se usan para entrenar?</dt>
+            <dd>No. Anthropic no usa datos de API para entrenar (según su política de privacidad).</dd>
+            
+            <dt>¿Funciona en Windows?</dt>
+            <dd>Sí. WSL2 recomendado para mejor compatibilidad con herramientas Unix.</dd>
+            
+            <dt>¿Puedo compartir configuración del equipo?</dt>
+            <dd>Sí. Commit <code>.claude/settings.json</code>, <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.claude/commands/</code>, <code>.claude/agents/</code> al repo.</dd>
+            
+            <dt>¿Cómo actualizar?</dt>
+            <dd><code>claude update</code> o <code>npm update -g @anthropic-ai/claude-code</code></dd>
+            
+            <dt>¿Soporta otros modelos (GPT, local)?</dt>
+            <dd>No oficialmente. Solo modelos de Anthropic (Opus, Sonnet, Haiku).</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section id="recursos" class="doc-section" aria-labelledby="recursos-heading">
+        <header class="section-header">
+          <h2 id="recursos-heading">Recursos y Enlaces</h2>
+          <a href="#recursos" class="section-anchor" aria-label="Enlace a esta sección">#</a>
+        </header>
+        <div class="section-content">
+          <h3>Oficiales</h3>
+          <ul class="resource-list">
+            <li><a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">📖 Documentación oficial de Claude Code</a></li>
+            <li><a href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">🐙 Repositorio oficial (GitHub)</a></li>
+            <li><a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">🌐 Página de producto</a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank" rel="noopener">🚀 Quickstart guide</a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/claude-code/reference" target="_blank" rel="noopener">📋 Referencia de comandos completa</a></li>
+          </ul>
+
+          <h3>MCP (Model Context Protocol)</h3>
+          <ul class="resource-list">
+            <li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">🔌 Sitio oficial MCP</a></li>
+            <li><a href="https://github.com/modelcontextprotocol" target="_blank" rel="noopener">🐙 Org GitHub de MCP</a></li>
+            <li><a href="https://github.com/modelcontextprotocol/servers" target="_blank" rel="noopener">📦 Servidores MCP oficiales</a></li>
+            <li><a href="https://spec.modelcontextprotocol.io" target="_blank" rel="noopener">📄 Especificación MCP</a></li>
+          </ul>
+
+          <h3>Comunidad y Ejemplos</h3>
+          <ul class="resource-list">
+            <li><a href="https://github.com/anthropics/claude-code-awesome" target="_blank" rel="noopener">⭐ Awesome Claude Code (curated)</a></li>
+            <li><a href="https://www.reddit.com/r/ClaudeCode/" target="_blank" rel="noopener">💬 Reddit r/ClaudeCode</a></li>
+            <li><a href="https://discord.gg/anthropic" target="_blank" rel="noopener">💬 Discord oficial Anthropic</a></li>
+            <li><a href="https://github.com/search?q=claude-code+skill" target="_blank" rel="noopener">🔍 Skills en GitHub</a></li>
+          </ul>
+
+          <h3>Herramientas relacionadas</h3>
+          <ul class="resource-list">
+            <li><a href="https://github.com/anthropics/claude-code-action" target="_blank" rel="noopener">⚙️ GitHub Action para Claude Code</a></li>
+            <li><a href="https://www.npmjs.com/package/@anthropic-ai/claude-code" target="_blank" rel="noopener">📦 Paquete npm</a></li>
+            <li><a href="https://github.com/modelcontextprotocol/typescript-sdk" target="_blank" rel="noopener">🔧 TypeScript SDK para MCP</a></li>
+            <li><a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank" rel="noopener">🐍 Python SDK para MCP</a></li>
+          </ul>
+
+          <h3>Referencia rápida de comandos</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Categoría</th><th>Comandos clave</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Sesión</strong></td><td><code>claude</code>, <code>claude -p "..."</code>, <code>/exit</code>, <code>/clear</code>, <code>/compact</code>, <code>/cost</code></td></tr>
+              <tr><td><strong>Config</strong></td><td><code>claude config get/set/list</code>, <code>claude auth login/logout/status</code>, <code>claude doctor</code></td></tr>
+              <tr><td><strong>Modelo</strong></td><td><code>/model</code>, <code>--model sonnet|opus|haiku</code></td></tr>
+              <tr><td><strong>Permisos</strong></td><td><code>/permissions</code>, <code>--allowedTools</code>, <code>--disallowedTools</code></td></tr>
+              <tr><td><strong>MCP</strong></td><td><code>/mcp</code>, <code>/mcp status</code>, <code>/mcp tools <server></code>, <code>/mcp call</code></td></tr>
+              <tr><td><strong>Agentes</strong></td><td><code>/agents</code>, <code>/agent <name> "task"</code></td></tr>
+              <tr><td><strong>Hooks</strong></td><td><code>/hooks</code> (ver config en settings.json)</td></tr>
+              <tr><td><strong>Skills</strong></td><td><code>/skill list</code>, <code>/skill load <name></code>, <code>/skill create</code></td></tr>
+              <tr><td><strong>Slash Commands</strong></td><td><code>/<command></code>, <code>/namespace:subcommand</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Archivos de configuración de este repo</h3>
+          <ul class="resource-list">
+            <li><a href="../CLAUDE.md" target="_blank" rel="noopener">📄 CLAUDE.md (raíz del repo)</a></li>
+            <li><a href="../AGENTS.md" target="_blank" rel="noopener">📄 AGENTS.md (raíz del repo)</a></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p>Manual de Referencia de Claude — HTML5 + CSS + Vanilla JS</p>
+      <p class="footer-links">
+        <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">Docs Oficiales</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <a href="#introduccion">Volver al inicio</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
